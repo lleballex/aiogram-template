@@ -1,3 +1,8 @@
+from handlers import register_handlers
+
+from aiogram import Dispatcher, Bot
+from aiogram.fsm.storage.memory import MemoryStorage
+
 from pathlib import Path
 from loguru import logger
 from dotenv import load_dotenv
@@ -9,8 +14,12 @@ def main() -> None:
     load_dotenv(base_dir / '.env')
     logger.add(base_dir / 'logs.log', level="INFO")
 
-    import handlers
-    from misc import dp, bot
+    import config
+
+    dp = Dispatcher(storage=MemoryStorage())
+    bot = Bot(config.BOT_TOKEN, parse_mode='HTML')
+
+    register_handlers(dp)
 
     logger.info('Bot started')
     dp.run_polling(bot)
